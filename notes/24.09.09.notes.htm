@@ -54,6 +54,7 @@
 
   <svg height="250" width="250" style="background: black">
     <!--- We're going to be populating this dynamically today --->
+
   </svg>
 
 
@@ -74,13 +75,19 @@
   
   // 1. How can we select elements? What is the difference between select() and selectAll()?
 
+let d3div1 = d3.select("#d1");
+console.log(d3div1);
+d3div1.text("haha")
+      .style("color","red")
+      .style("background-color","yellow")
 
 
 
   
   
   // 2a. How can we create new elements, and set their attributes and styles?
-  
+  let svg = d3.select("svg");
+  console.log(svg);
   
   
   
