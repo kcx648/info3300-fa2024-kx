@@ -59,34 +59,63 @@
     // --- 1
     //  '../datasets/titanic.json'
     console.log( '---Top of file---' );
+
+    console.log(d3.json('../datasets/titanic.json'));            
+
+d3.json('../datasets/titanic.json')
+  .then( function(data) {
+   console.log("promise",data);
+  });
                   
     
-    
-
     // --- 2
     // Let's make a plain old scatterplot
 
     // 0. Find our SVG and get that ready
     //     We're going to use a new way of padding that makes axes easier
-    // const svg = d3.select('svg#scatterplot');
-    // const width = svg.attr('width');
-    // const height = svg.attr('height');
-    
-    
+    const svg = d3.select('svg#scatterplot');
+    const width = svg.attr('width');
+    const height = svg.attr('height');
+
+    const margins = { top: 10, right: 10, bottom: 50, left: 50 };
+    const chartwidth = width - margins.left - margins.right;
+    const chartheight = height - margins.top - margins.bottom;
+
+    let charArea = svg.append('g')
+      .attr('transform', `translate(${margins.left},${margins.top})`);
     
     
     // 1. Import some CSV data
-    //        .then( function(successfulResult), function(errorMessage) )
-    
-    
-            
+    //   .then( function(successfulResult), function(errorMessage) )
+    d3.csv('../datasets/gapminder.csv').then( function(data) {
+      console.log(data);
+      data.forEach ((d) => {
+        d['life'] = Number(d['Life Expectancy']);
+        d['gdp'] = Number(d['GDP/Person (PPP$)']);
+        d['pop'] = Number(d['Total Population'].replace(/,/g, ''));
+      });
+    });
+
     // 2. Check for data issues
     
   
 
     // 3. Let's build some scales
     
-    
+    const gdpExtent = d3.extent(data, d => d['gdp']);
+    const gdpScale = d3.scaleLinear()
+      .domain(gdpExtent)
+      .range([0, chartwidth]);
+
+    const lifeExtent = d3.extent(data, d => d['life']);
+    const lifeScale = d3.scaleLinear()
+      .domain(lifeExtent)
+      .range([chartheight, 0]);
+
+    const popExtent = d3.extent(data, d => d['pop']);
+    const popScale = d3.scaleLinear()
+      .domain(popExtent)
+      .range([5, 10]);
     
     
     // 4. Start plotting circles and see what happens
