@@ -1,4 +1,4 @@
-<html><head>
+<html ><head>
 <title>INFO 3300 - September 11</title>
 
   <link href="https://fonts.googleapis.com/css?family=Lato:400,700|Raleway:400,700" rel="stylesheet">
@@ -62,35 +62,54 @@
     // --- 1. Let's make a histogram of all passengers on the Titanic
     //  This will take the form of a bar chart -- but we are using a trick and not creating <rect> for each bar
     //  Instead, we'll make a thick vertical <line> for each bar. I don't recommend you do this outside of toy examples
-    console.log(passengers);
+
     let svg = d3.select("svg#all");
     let width = svg.attr("width");
     let height = svg.attr("height");
 
-    let ageScale=d3.scaleLinear().domain([0,80]).range([10,width-10]);
-    let livedScale=d3.scaleLinear().domain([0,300]).range([10,height-10]);
-    
-    console.log(ageScale);
+    let ageScale=d3.scaleLinear()
+    .domain([0,80])//inout - data
+    .range([10,width-10]);//output - pixel
 
+    let maxLived =d3.max (passengers, d => d.lived);
+    let maxDied =d3.max (passengers, d => d.died);
+    let maxMortality = Math.max(maxLived,maxDied);
+    console.log(maxMortality);
+
+    let livedScale=d3.scaleLinear().domain([0,300]).range([height/2,10]);
+    let diedScale=d3.scaleLinear().domain([0,300]).range([height/2,height-10,]);
+    //lived
     passengers.forEach( (d,i) => {
-
       svg.append("line")
         .attr("x1", ageScale(d.age))
         .attr("x2", ageScale(d.age))
-        .attr("y1", height-10)
+        .attr("y1", height/2.0)
         .attr("y2", height-livedScale(d.lived))
         .attr("stroke", "blue")
         .attr("stroke-width", 10);
     });
-    
-    
-    // --- 2. What about deaths? (oop, things are getting pretty dark)
-    //  We can make a double histogram for this!
-    
-    
-    
+
+    //died
+    passengers.forEach( (d,i) => {
+      svg.append("line")
+        .attr("x1", ageScale(d.age))
+        .attr("x2", ageScale(d.age))
+        .attr("y1", height/2.0)
+        .attr("y2", height-diedScale(d.died))
+        .attr("stroke", "red")
+        .attr("stroke-width", 10);
+    });
+
+    svg.append("text")
+    .attr("x",ageScale(d['age']))
+    .attr("y",livedScale(d['lived'])-10)
+    .attr("text-anchor","middle")
+    .text(d['age'])
 
 
+
+    
+    
 
 
     // --- 3. Let's break the data down by gender now!
